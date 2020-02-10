@@ -1,5 +1,6 @@
 {
   "name": "omlatt2020",
+  "productName": "ohMyLookAtTheTime",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -22,8 +23,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.develar.ElectronReact",
+    "productName": "ohMyLookAtTheTime",
+    "appId": "ohMyLookAtTheTime",
     "files": [
       "dist/",
       "node_modules/",
@@ -111,6 +112,7 @@
     "@hot-loader/react-dom": "^16.11.0",
     "connected-react-router": "^6.6.1",
     "core-js": "^3.6.4",
+    "electron": "^8.0.0",
     "electron-debug": "^3.0.1",
     "electron-log": "^4.0.6",
     "electron-updater": "^4.2.0",

@@ -9,10 +9,12 @@
  * `./app/main.prod.js` using webpack. This gives us some performance wins.
  *
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
+import electron from 'electron'
 import { autoUpdater } from 'electron-updater';
+import path from 'path'
+import fs from 'fs'
 import log from 'electron-log';
-import MenuBuilder from './menu';
 
 export default class AppUpdater {
   constructor() {
@@ -46,6 +48,15 @@ const installExtensions = async () => {
   ).catch(console.log);
 };
 
+const parseDataFile = filePath => {
+  try {
+    return JSON.parse(fs.readFileSync(filePath))
+  } catch (error) {
+    console.log(error)
+    return 'error'
+  }
+}
+
 const createWindow = async () => {
   if (
     process.env.NODE_ENV === 'development' ||
@@ -56,12 +67,16 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
+    width: 1280,
     height: 728,
+    frame: false,
     webPreferences: {
       nodeIntegration: true
     }
   });
+
+  const userDataPath = (app || electron.remote.app).getPath('userData')
+  const filePath = path.join(userDataPath, 'data.json')
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
@@ -71,6 +86,12 @@ const createWindow = async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
+
+    // send saved data, if any
+    if (fs.existsSync(filePath)) {
+      mainWindow.webContents.send('saves', parseDataFile(filePath))
+    }
+
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
@@ -83,8 +104,16 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  // save data
+  ipcMain.on('save-data', (event, arg) => {
+    console.log('saving data to: ', filePath)
+
+    fs.writeFileSync(filePath, JSON.stringify(arg))
+  })
+
+  ipcMain.on('close-window', (event, arg) => {
+    app.quit()
+  })
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line

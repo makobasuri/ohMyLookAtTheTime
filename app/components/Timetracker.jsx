@@ -32,6 +32,7 @@ export const Timetracker = () => {
   const [ id, setId ] = useState(0)
   const [ name, setName ] = useState('')
   const [ date, setDate ] = useState('')
+  const [ day, SetDay ] = useState('')
   const [ hours, setHours ] = useState('00')
   const [ minutes, setMinutes ] = useState('00')
   const [ seconds, setSeconds ] = useState('00')
@@ -48,6 +49,7 @@ export const Timetracker = () => {
     setMinutes(minutes < 10 ? '0' + minutes : minutes)
     setSeconds(seconds < 10 ? '0' + seconds : seconds)
     setDate(new Date().toLocaleString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'}))
+    SetDay(new Date().getDay())
   }
 
   const stopCounter = () => {
@@ -140,7 +142,7 @@ export const Timetracker = () => {
         <ul>
           {timeItems.length > 0 ? timeItems.map(item => (
             <li key={item.id}>
-              <p>name: {item.name ? item.name : 'TODO: input'} | date: {item.date} | id: {item.id} | time: {item.hours}:{item.minutes}{item.seconds}</p>
+              <p>name: {item.name ? item.name : 'TODO: input'} | date: {item.date} | id: {item.id} | time: {item.hours}:{item.minutes}:{item.seconds}</p>
             </li>
           )) : ''}
         </ul>
