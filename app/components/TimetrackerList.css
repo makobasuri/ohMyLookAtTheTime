@@ -1,0 +1,28 @@
+:local ul {
+  padding: 0;
+  list-style: none;
+}
+
+:local li {
+  display: grid;
+  grid-template-columns: minmax(100px, 2fr) minmax(100px, 1fr) minmax(100px, 1fr);
+  grid-gap: 10px;
+}
+
+:local p {
+  overflow-wrap: break-word;
+  text-align: right;
+}
+
+:local p:first-child {
+  text-align: left;
+}
+
+:local p.center {
+  margin-bottom: 0;
+  text-align: center;
+}
+
+:local p.center + p.center {
+  margin-top: 0;
+}

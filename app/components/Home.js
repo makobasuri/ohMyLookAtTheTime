@@ -11,10 +11,6 @@ const exitApp = () => {
   ipcRenderer.send('close-window')
 }
 
-let initialTimeItems = [];
-
-ipcRenderer.on('saves', (event, message) => console.log(message));
-
 export default class Home extends Component {
   render() {
     return (

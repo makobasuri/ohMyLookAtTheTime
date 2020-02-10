@@ -108,7 +108,7 @@ const createWindow = async () => {
   ipcMain.on('save-data', (event, arg) => {
     console.log('saving data to: ', filePath)
 
-    fs.writeFileSync(filePath, JSON.stringify(arg))
+    fs.writeFileSync(filePath, JSON.stringify(arg, null, 2))
   })
 
   ipcMain.on('close-window', (event, arg) => {

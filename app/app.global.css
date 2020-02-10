@@ -37,7 +37,7 @@ body {
   -webkit-app-region: no-drag;
 }
 
-#root p {
+p {
   text-align: justify;
 }
 

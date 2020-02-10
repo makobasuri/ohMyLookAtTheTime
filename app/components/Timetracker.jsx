@@ -1,7 +1,8 @@
-import React, { useState, useReducer } from 'react'
+import React, { useState, useReducer, useEffect } from 'react'
 import { ipcRenderer } from 'electron'
 import { Button } from './Button'
 import styles from './Timetracker.css'
+import {TimetrackerList} from './TimetrackerList'
 
 const getDateNow = () => Math.floor(Date.now() / 1000)
 
@@ -32,11 +33,21 @@ export const Timetracker = () => {
   const [ id, setId ] = useState(0)
   const [ name, setName ] = useState('')
   const [ date, setDate ] = useState('')
-  const [ day, SetDay ] = useState('')
+  const [ day, setDay ] = useState('')
+  const [ project, setProject ] = useState('')
   const [ hours, setHours ] = useState('00')
   const [ minutes, setMinutes ] = useState('00')
   const [ seconds, setSeconds ] = useState('00')
   const [ isCounting, setIsCounting ] = useState(false)
+
+  useEffect(() => {
+    ipcRenderer.on('saves', (event, message) => {
+      message.forEach(messageItem => setTimeItems({
+        type: 'add',
+        data: messageItem
+      }))
+    });
+  })
 
   const countTime = () => {
     const now = getDateNow()
@@ -49,7 +60,7 @@ export const Timetracker = () => {
     setMinutes(minutes < 10 ? '0' + minutes : minutes)
     setSeconds(seconds < 10 ? '0' + seconds : seconds)
     setDate(new Date().toLocaleString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'}))
-    SetDay(new Date().getDay())
+    setDay(new Date().toLocaleString('de-DE', {weekday: 'long'}))
   }
 
   const stopCounter = () => {
@@ -69,7 +80,9 @@ export const Timetracker = () => {
           data: {
             id: id,
             name: name,
+            project: project,
             date: date,
+            day: day,
             hours: hours,
             minutes: minutes,
             seconds: seconds
@@ -84,7 +97,9 @@ export const Timetracker = () => {
           data: {
             id: id,
             name: name,
+            project: project,
             date: date,
+            day: day,
             hours: hours,
             minutes: minutes,
             seconds: seconds
@@ -102,6 +117,8 @@ export const Timetracker = () => {
     setMinutes('00')
     setSeconds('00')
     setDate('')
+    setDay('')
+    setProject('')
   }
 
   const handleTracker = event => {
@@ -139,13 +156,7 @@ export const Timetracker = () => {
           </Button>
           <span className={styles.counter}>{hours}:{minutes}:{seconds}</span>
         </form>
-        <ul>
-          {timeItems.length > 0 ? timeItems.map(item => (
-            <li key={item.id}>
-              <p>name: {item.name ? item.name : 'TODO: input'} | date: {item.date} | id: {item.id} | time: {item.hours}:{item.minutes}:{item.seconds}</p>
-            </li>
-          )) : ''}
-        </ul>
+        <TimetrackerList timeItems={timeItems}/>
       </React.Fragment>
   )
 }
