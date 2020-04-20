@@ -18,11 +18,12 @@
   text-align: left;
 }
 
-:local p.center {
+:local p.date {
+  font-size: 12px;
   margin-bottom: 0;
   text-align: center;
 }
 
-:local p.center + p.center {
+:local p.date+p.date {
   margin-top: 0;
 }

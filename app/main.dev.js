@@ -111,6 +111,11 @@ const createWindow = async () => {
     fs.writeFileSync(filePath, JSON.stringify(arg, null, 2))
   })
 
+  ipcMain.on('reset', () => {
+    fs.writeFileSync(filePath, JSON.stringify('[]'))
+    mainWindow.reload()
+  })
+
   ipcMain.on('close-window', (event, arg) => {
     app.quit()
   })

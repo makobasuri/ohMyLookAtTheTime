@@ -3,6 +3,7 @@ import { ipcRenderer } from 'electron'
 import { Button } from './Button'
 import styles from './Timetracker.css'
 import {TimetrackerList} from './TimetrackerList'
+import {TimeResetter} from './TimeResetter'
 
 const getDateNow = () => Math.floor(Date.now() / 1000)
 
@@ -42,10 +43,14 @@ export const Timetracker = () => {
 
   useEffect(() => {
     ipcRenderer.on('saves', (event, message) => {
-      message.forEach(messageItem => setTimeItems({
-        type: 'add',
-        data: messageItem
-      }))
+      if (message.length > 0 && message !== 'error') {
+        console.log(message, message.length);
+        setId(message[message.length -1] + 1);
+        message.forEach(messageItem => setTimeItems({
+          type: 'add',
+          data: messageItem
+        }))
+      }
     });
   })
 
@@ -157,6 +162,7 @@ export const Timetracker = () => {
           <span className={styles.counter}>{hours}:{minutes}:{seconds}</span>
         </form>
         <TimetrackerList timeItems={timeItems}/>
+        <TimeResetter />
       </React.Fragment>
   )
 }

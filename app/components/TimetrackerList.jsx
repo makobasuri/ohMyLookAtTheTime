@@ -21,7 +21,7 @@ export const TimetrackerList = props => {
       {props.timeItems.length > 0 ? props.timeItems.map(item => (
         <li key={item.id}>
           <p>{item.name ? item.name : 'TODO: input'}</p>
-          <div><p className={styles.center}>{item.day}</p><p className={styles.center}>{item.date}</p></div>
+          <div><p className={styles.date}>{item.day}</p><p className={styles.date}>{item.date}</p></div>
           <p>{item.hours}:{item.minutes}:{item.seconds}</p>
         </li>
       )) : ''}
