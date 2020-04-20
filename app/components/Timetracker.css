@@ -4,17 +4,6 @@
   justify-content: space-between;
 }
 
-:local .input {
-  border: none;
-  background-color: transparent;
-  caret-color: white;
-  color: white;
-}
-
-:local .input:focus {
-  outline: 0;
-}
-
 :local .counter {
   float: right;
 }

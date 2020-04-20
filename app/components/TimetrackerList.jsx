@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styles from './Timetrackerlist.css'
+import {TimetrackerInput} from './TimetrackerInput'
 
 export const TimetrackerList = props => {
   // const [trackedItems, setTracked] = useState()
@@ -14,13 +15,11 @@ export const TimetrackerList = props => {
   //   }))
   // }
 
-  console.log(props.timeItems)
-
   return (
     <ul>
       {props.timeItems.length > 0 ? props.timeItems.map(item => (
         <li key={item.id}>
-          <p>{item.name ? item.name : 'TODO: input'}</p>
+          <TimetrackerInput name={item.name} id={item.id}/>
           <div><p className={styles.date}>{item.day}</p><p className={styles.date}>{item.date}</p></div>
           <p>{item.hours}:{item.minutes}:{item.seconds}</p>
         </li>

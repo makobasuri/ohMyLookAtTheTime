@@ -111,6 +111,26 @@ const createWindow = async () => {
     fs.writeFileSync(filePath, JSON.stringify(arg, null, 2))
   })
 
+  ipcMain.on('save-name', (event, arg) => {
+    const savedData = JSON.parse(fs.readFileSync(filePath))
+
+    if (savedData.filter(datapoint => datapoint.id === arg.id).length > 0) {
+
+      fs.writeFileSync(filePath, JSON.stringify(
+        savedData.map(dataPoint => {
+          if (dataPoint.id == arg.id) {
+            dataPoint.name = arg.value
+          }
+
+          return dataPoint
+        }),
+        null,
+        2
+      ))
+    }
+    console.log(savedData, arg.value, arg.id)
+  })
+
   ipcMain.on('reset', () => {
     fs.writeFileSync(filePath, JSON.stringify('[]'))
     mainWindow.reload()

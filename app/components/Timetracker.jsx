@@ -44,8 +44,8 @@ export const Timetracker = () => {
   useEffect(() => {
     ipcRenderer.on('saves', (event, message) => {
       if (message.length > 0 && message !== 'error') {
-        console.log(message, message.length);
-        setId(message[message.length -1] + 1);
+        console.log('onSaves', message, message.length);
+        setId(message.length);
         message.forEach(messageItem => setTimeItems({
           type: 'add',
           data: messageItem
@@ -115,7 +115,7 @@ export const Timetracker = () => {
 
   }
 
-  const handleStop = () => {
+  const handleNew = () => {
     setId(id + 1)
     stopCounter()
     startTime = 0
@@ -151,14 +151,14 @@ export const Timetracker = () => {
   return (
       <React.Fragment>
         <form onSubmit={handleTracker}>
-          <input className={styles.input} type="text" placeholder="Whatcha doin?" onChange={onNameChange}/>
+          <input className={'input'} type="text" placeholder="Whatcha doin?" onChange={onNameChange}/>
           <Button classes={timerButtonClasses} handleClick={handleTracker}>
             <span className={styles.timerclip}>
               <span className={styles.timerclip__bg}></span>
             </span>
           </Button>
-          <Button handleClick={handleStop}>
-            <span>stop</span>
+          <Button handleClick={handleNew}>
+            <span>new</span>
           </Button>
           <span className={styles.counter}>{hours}:{minutes}:{seconds}</span>
         </form>
