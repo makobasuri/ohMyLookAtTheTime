@@ -118,6 +118,7 @@ export const Timetracker = () => {
   const handleStop = () => {
     setId(id + 1)
     stopCounter()
+    startTime = 0
     setHours('00')
     setMinutes('00')
     setSeconds('00')
