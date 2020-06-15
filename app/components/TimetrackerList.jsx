@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import styles from './Timetrackerlist.css'
+import {Button} from './Button'
+import timerStyles from './Timetracker.css'
 import {TimetrackerInput} from './TimetrackerInput'
 
-export const TimetrackerList = props => {
+export const TimetrackerList = ({timeItems, onContinueTimeToday}) => {
   // const [trackedItems, setTracked] = useState()
 
   // const onTrackedItemUpdate = itemData => {
@@ -15,13 +17,23 @@ export const TimetrackerList = props => {
   //   }))
   // }
 
+  const timerButtonClasses = `${timerStyles.timerbutton} ${styles.timerbutton}`
+  const timerclip__bgClasses = `${timerStyles.timerclip__bg} ${styles.timerclip__bg}`
+
   return (
     <ul>
-      {props.timeItems.length > 0 ? props.timeItems.map(item => (
+      {timeItems.length > 0 ? timeItems.map(item => (
         <li key={item.id}>
           <TimetrackerInput name={item.name} id={item.id}/>
           <div><p className={styles.date}>{item.day}</p><p className={styles.date}>{item.date}</p></div>
-          <p>{item.hours}:{item.minutes}:{item.seconds}</p>
+          <div className={styles.timerbuttonwrapper}>
+            <Button classes={timerButtonClasses} type="button" handleClick={(event) => onContinueTimeToday(item.name)}>
+              <span className={timerStyles.timerclip}>
+                <span className={timerclip__bgClasses}></span>
+              </span>
+            </Button>
+          </div>
+          <p className={styles.textright}>{item.hours}:{item.minutes}:{item.seconds}</p>
         </li>
       )) : ''}
     </ul>

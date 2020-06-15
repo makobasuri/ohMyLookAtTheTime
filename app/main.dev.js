@@ -128,11 +128,12 @@ const createWindow = async () => {
         2
       ))
     }
-    console.log(savedData, arg.value, arg.id)
+
+    // console.log(savedData, arg.value, arg.id)
   })
 
   ipcMain.on('reset', () => {
-    fs.writeFileSync(filePath, JSON.stringify('[]'))
+    fs.writeFileSync(filePath, '[]')
     mainWindow.reload()
   })
 

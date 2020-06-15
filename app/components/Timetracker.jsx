@@ -116,21 +116,29 @@ export const Timetracker = () => {
   }
 
   const handleNew = () => {
-    setId(id + 1)
+    if ((id) < timeItems.length) {
+      setId(timeItems.length + 1)
+    } else {
+      setId(id + 1)
+    }
     stopCounter()
     startTime = 0
     setHours('00')
     setMinutes('00')
     setSeconds('00')
+    setName('')
     setDate('')
     setDay('')
     setProject('')
   }
 
-  const handleTracker = event => {
-    event.preventDefault()
+  const handleTracker = (event, skipCheck) => {
+    if (event) {
+      event.preventDefault()
+    }
 
-    if (isCounting) {
+    if (skipCheck === false && isCounting) {
+      console.log('should cancel once')
       stopCounter()
       return
     }
@@ -140,8 +148,28 @@ export const Timetracker = () => {
     setIsCounting(true)
   }
 
-  const onNameChange = event => {
-    setName(event.target.value)
+  const onNameChange = nameOrEvent => {
+    setName(nameOrEvent.target ? nameOrEvent.target.value : nameOrEvent)
+  }
+
+  const continueTimeToday = (newName) => {
+    if (isCounting && newName === name) {
+      return
+    }
+
+    if (isCounting) {
+      handleNew()
+      setName(newName)
+      setTimeout(() => {
+        handleTracker(false, true)
+      }, 2000)
+      return
+    }
+
+    console.log('not counting', id, timeItems.length)
+
+    onNameChange(newName)
+    handleTracker()
   }
 
   const timerButtonClasses = isCounting
@@ -151,18 +179,21 @@ export const Timetracker = () => {
   return (
       <React.Fragment>
         <form onSubmit={handleTracker}>
-          <input className={'input'} type="text" placeholder="Whatcha doin?" onChange={onNameChange}/>
-          <Button classes={timerButtonClasses} handleClick={handleTracker}>
+          <input className={'input'} type="text" placeholder="Whatcha doin?" value={name} onChange={onNameChange}/>
+          <Button classes={timerButtonClasses} type="button" handleClick={handleTracker}>
             <span className={styles.timerclip}>
               <span className={styles.timerclip__bg}></span>
             </span>
           </Button>
-          <Button handleClick={handleNew}>
+          <Button type="button" handleClick={handleNew}>
             <span>new</span>
           </Button>
           <span className={styles.counter}>{hours}:{minutes}:{seconds}</span>
         </form>
-        <TimetrackerList timeItems={timeItems}/>
+        <TimetrackerList
+          timeItems={timeItems}
+          onContinueTimeToday={continueTimeToday}
+        />
         <TimeResetter />
       </React.Fragment>
   )

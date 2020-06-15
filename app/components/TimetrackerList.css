@@ -5,8 +5,8 @@
 
 :local li {
   display: grid;
-  grid-template-columns: minmax(100px, 2fr) minmax(100px, 1fr) minmax(100px, 1fr);
-  grid-gap: 10px;
+  grid-template-columns: minmax(100px, 2fr) minmax(100px, 1fr) minmax(30px, 1fr) minmax(100px, 1fr);
+  grid-gap: 8px;
 }
 
 :local p {
@@ -26,4 +26,22 @@
 
 :local p.date+p.date {
   margin-top: 0;
+}
+
+:local .textright {
+  text-align: right;
+}
+
+:local .timerbuttonwrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+:local .timerbutton {
+  background-color: transparent;
+}
+
+:local .timerclip__bg {
+  background-color: white;
 }

@@ -67,6 +67,7 @@ h6 {
   background-color: transparent;
   caret-color: white;
   color: white;
+  text-overflow: ellipsis;
 }
 
 .input:focus {
