@@ -172,6 +172,25 @@ export const Timetracker = () => {
     handleTracker()
   }
 
+  const changeTimeItem = item => {
+    setTimeItems(
+      {
+        type: 'modify',
+        id: item.id,
+        data: {
+          id: item.id,
+          name: item.name,
+          project: item.project,
+          date: item.date,
+          day: item.day,
+          hours: item.hours,
+          minutes: item.minutes,
+          seconds: item.seconds
+        }
+      }
+    )
+  }
+
   const timerButtonClasses = isCounting
     ? `${styles.timerbutton} ${styles.iscounting}`
     : `${styles.timerbutton}`
@@ -193,6 +212,7 @@ export const Timetracker = () => {
         <TimetrackerList
           timeItems={timeItems}
           onContinueTimeToday={continueTimeToday}
+          onChangeTimeItem={changeTimeItem}
         />
         <TimeResetter />
       </React.Fragment>
