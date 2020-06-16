@@ -156,7 +156,7 @@ const createWindow = async () => {
       properties: ['openFile']
     }).then(result => {
       if (result.filePaths[0]) {
-        const csvData = parseCSVFile(fs.readFileSync(result.filePaths[0]))
+        const csvData = parseCSVFile(fs.readFileSync(result.filePaths[0], 'latin1'))
         const openProjects = csvData.filter(project => project.Status === 'Offen')
         const relevantProjects = openProjects.map(project => ({
           name: project.Projekt,
