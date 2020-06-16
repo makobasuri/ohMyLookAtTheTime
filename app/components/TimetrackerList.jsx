@@ -22,8 +22,10 @@ export const TimetrackerList = ({timeItems, onChangeTimeItem, onContinueTimeToda
           <ul>
             {part[partName].map(item => (
               <li key={item.id}>
-                <TimetrackerInput name={item.name} id={item.id} onChange={onChangeTimeItem} />
-                <div></div>
+                <div>
+                  <TimetrackerInput name={item.name} id={item.id} onChange={onChangeTimeItem} />
+                  <p className={styles.project}>{item.project}</p>
+                </div>
                 <div className={styles.timerbuttonwrapper}>
                   <Button classes={timerButtonClasses} type="button" handleClick={() => onContinueTimeToday(item.name)}>
                     <span className={timerStyles.timerclip}>

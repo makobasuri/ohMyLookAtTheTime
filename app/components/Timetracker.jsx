@@ -212,7 +212,7 @@ export const Timetracker = () => {
             <select value={project} onChange={onSetProject}>
                 <option></option>
               {projects.length > 0 ? projects.map((currProj, index) => (
-                <option key={index} value={`${currProj.name} ${currProj.task}`}>{currProj.name} {currProj.task}</option>
+                <option key={index} value={`${currProj.name} -- ${currProj.task}`}>{currProj.name} -- {currProj.task}</option>
               )) : ''}
             </select>
           </div>
