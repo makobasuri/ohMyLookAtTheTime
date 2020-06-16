@@ -4,6 +4,7 @@ import { Button } from './Button'
 import styles from './Timetracker.css'
 import {TimetrackerList} from './TimetrackerList'
 import {TimeResetter} from './TimeResetter'
+import {OpenFile} from './OpenFile'
 
 const getDateNow = () => Math.floor(Date.now() / 1000)
 
@@ -35,6 +36,7 @@ export const Timetracker = () => {
   const [ name, setName ] = useState('')
   const [ date, setDate ] = useState('')
   const [ day, setDay ] = useState('')
+  const [ projects, setProjects ] = useState([])
   const [ project, setProject ] = useState('')
   const [ hours, setHours ] = useState('00')
   const [ minutes, setMinutes ] = useState('00')
@@ -52,6 +54,10 @@ export const Timetracker = () => {
         }))
       }
     });
+
+    ipcRenderer.on('projectsData', (event, projects) => {
+      setProjects(projects)
+    })
   })
 
   const countTime = () => {
@@ -112,7 +118,6 @@ export const Timetracker = () => {
         }
       )
     }
-
   }
 
   const handleNew = () => {
@@ -150,6 +155,10 @@ export const Timetracker = () => {
 
   const onNameChange = nameOrEvent => {
     setName(nameOrEvent.target ? nameOrEvent.target.value : nameOrEvent)
+  }
+
+  const onSetProject = event => {
+    setProject(event.target.value)
   }
 
   const continueTimeToday = (newName) => {
@@ -198,7 +207,15 @@ export const Timetracker = () => {
   return (
       <React.Fragment>
         <form onSubmit={handleTracker}>
-          <input className={'input'} type="text" placeholder="Whatcha doin?" value={name} onChange={onNameChange}/>
+          <div>
+            <input className={'input'} type="text" placeholder="Whatcha doin?" value={name} onChange={onNameChange}/>
+            <select value={project} onChange={onSetProject}>
+                <option></option>
+              {projects.length > 0 ? projects.map((currProj, index) => (
+                <option key={index} value={`${currProj.name} ${currProj.task}`}>{currProj.name} {currProj.task}</option>
+              )) : ''}
+            </select>
+          </div>
           <Button classes={timerButtonClasses} type="button" handleClick={handleTracker}>
             <span className={styles.timerclip}>
               <span className={styles.timerclip__bg}></span>
@@ -215,6 +232,7 @@ export const Timetracker = () => {
           onChangeTimeItem={changeTimeItem}
         />
         <TimeResetter />
+        <OpenFile />
       </React.Fragment>
   )
 }

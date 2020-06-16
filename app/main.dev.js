@@ -9,12 +9,13 @@
  * `./app/main.prod.js` using webpack. This gives us some performance wins.
  *
  */
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import electron from 'electron'
 import { autoUpdater } from 'electron-updater';
 import path from 'path'
 import fs from 'fs'
-import log from 'electron-log';
+import log from 'electron-log'
+import parse from 'csv-parse/lib/sync'
 
 export default class AppUpdater {
   constructor() {
@@ -57,6 +58,15 @@ const parseDataFile = filePath => {
   }
 }
 
+const parseCSVFile = data => {
+  try {
+    return parse(data, {columns: true, delimiter: ';'})
+  } catch (error) {
+    console.log(error)
+    return 'error'
+  }
+}
+
 const createWindow = async () => {
   if (
     process.env.NODE_ENV === 'development' ||
@@ -77,6 +87,7 @@ const createWindow = async () => {
 
   const userDataPath = (app || electron.remote.app).getPath('userData')
   const filePath = path.join(userDataPath, 'data.json')
+  const projectsFilePath = path.join(userDataPath, 'projects.json')
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
@@ -90,6 +101,9 @@ const createWindow = async () => {
     // send saved data, if any
     if (fs.existsSync(filePath)) {
       mainWindow.webContents.send('saves', parseDataFile(filePath))
+    }
+    if (fs.existsSync(projectsFilePath)) {
+      mainWindow.webContents.send('projectsData', parseDataFile(projectsFilePath))
     }
 
     if (process.env.START_MINIMIZED) {
@@ -135,6 +149,25 @@ const createWindow = async () => {
   ipcMain.on('reset', () => {
     fs.writeFileSync(filePath, '[]')
     mainWindow.reload()
+  })
+
+  ipcMain.on('open-file', () => {
+    dialog.showOpenDialog(mainWindow, {
+      properties: ['openFile']
+    }).then(result => {
+      if (result.filePaths[0]) {
+        const csvData = parseCSVFile(fs.readFileSync(result.filePaths[0]))
+        const openProjects = csvData.filter(project => project.Status === 'Offen')
+        const relevantProjects = openProjects.map(project => ({
+          name: project.Projekt,
+          task: project.Aufgabe
+        }))
+
+        fs.writeFileSync(projectsFilePath, JSON.stringify(relevantProjects, null, 2))
+        mainWindow.webContents.send('projectsData', relevantProjects)
+      }
+
+    }).catch(err => console.log(err))
   })
 
   ipcMain.on('close-window', (event, arg) => {

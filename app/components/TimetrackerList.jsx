@@ -9,8 +9,6 @@ export const TimetrackerList = ({timeItems, onChangeTimeItem, onContinueTimeToda
   const timeParts = [...new Set([...timeItems.map(timeItem => `${timeItem.date} ${timeItem.day}`)])]
   const filledTimeParts = timeParts.map(part => ({[part]: timeItems.filter(timeItem => `${timeItem.date} ${timeItem.day}` === part)}))
 
-  console.log(filledTimeParts)
-
   const timerButtonClasses = `${timerStyles.timerbutton} ${styles.timerbutton}`
   const timerclip__bgClasses = `${timerStyles.timerclip__bg} ${styles.timerclip__bg}`
 
