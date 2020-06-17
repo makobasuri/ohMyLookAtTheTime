@@ -1,14 +1,5 @@
 /* eslint global-require: off */
 
-/**
- * This module executes inside of electron's main process. You can start
- * electron renderer process from here and communicate with the other processes
- * through IPC.
- *
- * When running `yarn build` or `yarn build-main`, this file is compiled to
- * `./app/main.prod.js` using webpack. This gives us some performance wins.
- *
- */
 import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import electron from 'electron'
 import { autoUpdater } from 'electron-updater';
@@ -82,7 +73,8 @@ const createWindow = async () => {
     frame: false,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    backgroundColor: '#1f1f1f'
   });
 
   const userDataPath = (app || electron.remote.app).getPath('userData')
@@ -91,8 +83,6 @@ const createWindow = async () => {
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('did-finish-load', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');

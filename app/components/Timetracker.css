@@ -8,13 +8,15 @@
   max-width: 180px;
   display: block;
   background: transparent;
-  border: 0;
   margin: 0;
   color: white;
   padding-bottom: 2px;
   font-size: 10px;
-  transform: translateX(-4px);
   border-radius: 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(to right, #FFF, rgba(255, 255, 255, 0));
   text-overflow: ellipsis;
 }
 
