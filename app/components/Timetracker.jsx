@@ -1,4 +1,5 @@
 import React, { useState, useReducer, useEffect } from 'react'
+import useInterval from './useInterval'
 import { ipcRenderer } from 'electron'
 import { Button } from './Button'
 import styles from './Timetracker.css'
@@ -8,8 +9,6 @@ import {OpenFile} from './OpenFile'
 
 const getDateNow = () => Math.floor(Date.now() / 1000)
 
-let startTime
-let counterInterval
 const initialTimeItems = []
 const timeItemsReducer = (state, action) => {
   switch(action.type) {
@@ -32,6 +31,7 @@ const timeItemsReducer = (state, action) => {
 
 export const Timetracker = () => {
   const [ timeItems, setTimeItems ] = useReducer(timeItemsReducer, initialTimeItems)
+  const [ startTime, setStartTime ] = useState(0)
   const [ id, setId ] = useState(0)
   const [ name, setName ] = useState('')
   const [ date, setDate ] = useState('')
@@ -42,6 +42,11 @@ export const Timetracker = () => {
   const [ minutes, setMinutes ] = useState('00')
   const [ seconds, setSeconds ] = useState('00')
   const [ isCounting, setIsCounting ] = useState(false)
+  const [ delay, setDelay ] = useState(1000);
+
+  useInterval(() => {
+    countTime()
+  }, isCounting ? delay : null)
 
   useEffect(() => {
     ipcRenderer.on('saves', (event, message) => {
@@ -75,8 +80,7 @@ export const Timetracker = () => {
   }
 
   const stopCounter = () => {
-    clearInterval(counterInterval)
-    startTime = getDateNow()
+    setStartTime(getDateNow())
     setIsCounting(false)
     writeTimeItem()
   }
@@ -127,7 +131,7 @@ export const Timetracker = () => {
       setId(id + 1)
     }
     stopCounter()
-    startTime = 0
+    setStartTime(0)
     setHours('00')
     setMinutes('00')
     setSeconds('00')
@@ -142,14 +146,13 @@ export const Timetracker = () => {
       event.preventDefault()
     }
 
-    if (skipCheck === false && isCounting) {
-      console.log('should cancel once')
+    if (!skipCheck && isCounting) {
       stopCounter()
       return
     }
+    console.log(startTime)
 
-    startTime = startTime ? startTime : getDateNow()
-    counterInterval = setInterval(countTime, 1000)
+    setStartTime(startTime > 0 ? startTime : getDateNow())
     setIsCounting(true)
   }
 
