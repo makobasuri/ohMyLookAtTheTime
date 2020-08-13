@@ -7,6 +7,15 @@ import {TimetrackerList} from './TimetrackerList'
 import {TimeResetter} from './TimeResetter'
 import {OpenFile} from './OpenFile'
 
+const getRemainingMinutes = (time) => {
+  const minutes = time / 60
+
+  if (Math.floor(minutes) < 60) {
+    return Math.floor(minutes)
+  }
+  return getRemainingMinutes(time - (60 * 1000))
+}
+
 const getDateNow = () => Math.floor(Date.now() / 1000)
 
 const initialTimeItems = []
@@ -68,8 +77,8 @@ export const Timetracker = () => {
   const countTime = () => {
     const now = getDateNow()
     const diff = now - startTime
-    const hours = Math.floor(diff / (60 * 60))
-    const minutes = Math.floor(diff / 60)
+    const hours = Math.floor(diff / (60 * 60 * 1000))
+    const minutes = getRemainingMinutes(diff)
     const seconds = Math.floor(diff % 60)
 
     setHours(hours < 10 ? '0' + hours : hours)
@@ -131,7 +140,7 @@ export const Timetracker = () => {
       setId(id + 1)
     }
     stopCounter()
-    setStartTime(0)
+    setStartTime(getDateNow())
     setHours('00')
     setMinutes('00')
     setSeconds('00')
@@ -148,11 +157,11 @@ export const Timetracker = () => {
 
     if (!skipCheck && isCounting) {
       stopCounter()
+      console.log('returning')
       return
     }
-    console.log(startTime)
 
-    setStartTime(startTime > 0 ? startTime : getDateNow())
+    setStartTime(startTime ? startTime : getDateNow())
     setIsCounting(true)
   }
 
