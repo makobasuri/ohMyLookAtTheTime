@@ -2,10 +2,9 @@ import React, { useState, useReducer, useEffect } from 'react'
 import useInterval from './useInterval'
 import { ipcRenderer } from 'electron'
 import { Button } from './Button'
-import styles from './Timetracker.css'
-import {TimetrackerList} from './TimetrackerList'
-import {TimeResetter} from './TimeResetter'
-import {OpenFile} from './OpenFile'
+import { TimetrackerList } from './TimetrackerList'
+import { TimeResetter } from './TimeResetter'
+import { OpenFile } from './OpenFile'
 
 const getRemainingMinutes = (time) => {
   const minutes = time / 60
@@ -212,31 +211,33 @@ export const Timetracker = () => {
     )
   }
 
-  const timerButtonClasses = isCounting
-    ? `${styles.timerbutton} ${styles.iscounting}`
-    : `${styles.timerbutton}`
+  const timerButtonBaseClasses = 'outline-none border-0 rounded-full w-8 h-8 p-0 bg-white leading-none cursor-pointer'
+
+  const timerButtonClipClasses = isCounting
+    ? 'inline-block clip-path-pause mt-1'
+    : 'inline-block clip-path-play ml-2 mt-1'
 
   return (
       <React.Fragment>
-        <form onSubmit={handleTracker}>
+        <form className="mb-4 flex items-center justify-between" onSubmit={handleTracker}>
           <div>
-            <input className={'input'} type="text" placeholder="Whatcha doin?" value={name} onChange={onNameChange}/>
-            <select value={project} onChange={onSetProject}>
-                <option></option>
+            <input className="mb-2 border-0 text-sm truncate bg-transparent focus:outline-none" type="text" placeholder="Whatcha doin?" value={name} onChange={onNameChange}/>
+            <select className="block m-0 border-0 border-b border-white rounded-none pb-2 max-w-select text-sm truncate bg-transparent" value={project} onChange={onSetProject}>
+                <option className="bg-black">Select a todo</option>
               {projects.length > 0 ? projects.map((currProj, index) => (
-                <option key={index} value={`${currProj.name} -- ${currProj.task}`}>{currProj.name} -- {currProj.task}</option>
+                <option className="bg-black" key={index} value={`${currProj.name} -- ${currProj.task}`}>{currProj.name} -- {currProj.task}</option>
               )) : ''}
             </select>
           </div>
-          <Button classes={timerButtonClasses} type="button" handleClick={handleTracker}>
-            <span className={styles.timerclip}>
-              <span className={styles.timerclip__bg}></span>
+          <Button classes={timerButtonBaseClasses} type="button" handleClick={handleTracker}>
+            <span className={timerButtonClipClasses}>
+              <span className="block w-4 h-4 bg-black"></span>
             </span>
           </Button>
-          <Button type="button" handleClick={handleNew}>
+          <Button classes="outline-none border-0 p-1 leading-none cursor-pointer" type="button" handleClick={handleNew}>
             <span>new</span>
           </Button>
-          <span className={styles.counter}>{hours}:{minutes}:{seconds}</span>
+          <span className="float-right font-mono">{hours}:{minutes}:{seconds}</span>
         </form>
         <TimetrackerList
           timeItems={timeItems}

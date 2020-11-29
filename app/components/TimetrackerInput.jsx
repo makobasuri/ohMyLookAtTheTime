@@ -15,7 +15,7 @@ export const TimetrackerInput = props => {
 
   return (
     <input
-      className={'input'}
+      className="border-0 text-sm truncate bg-transparent focus:outline-none"
       type="text"
       placeholder="Add name"
       onChange={(event) => onNameChange(event)}

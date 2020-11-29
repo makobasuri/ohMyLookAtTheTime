@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {ipcRenderer} from 'electron'
 
 export const OpenFile = () => {
@@ -8,6 +8,6 @@ export const OpenFile = () => {
   };
 
   return (
-    <button style={{position: 'absolute', bottom: '20px', right: '20px'}} onClick={openFile}>Open File</button>
+    <button className="absolute bottom-0 right-0 outline-none border-0 m-4 p-1 bg-white text-black leading-none cursor-pointer" onClick={openFile}>Open File</button>
   )
 }
